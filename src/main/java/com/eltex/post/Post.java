@@ -1,7 +1,11 @@
 package com.eltex.post;
 
+import org.jetbrains.annotations.Nullable;
+
 public record Post(int id, int authorId, String author, String authorJob, String authorAvatar, String context,
-                   String published, String link, boolean mentionedMe, boolean likedByMe) {
+                   String published, String link, boolean mentionedMe, boolean likedByMe,
+                   @Nullable Coordinates coordinates,
+                   @Nullable Attachment attachment) {
 
     public Builder builder() {
         return new Builder()
@@ -14,7 +18,9 @@ public record Post(int id, int authorId, String author, String authorJob, String
                 .setPublished(published)
                 .setLink(link)
                 .setMentionedMe(mentionedMe)
-                .setLikedByMe(likedByMe);
+                .setLikedByMe(likedByMe)
+                .setCoordinates(coordinates)
+                .setAttachment(attachment);
     }
 
     public static class Builder {
@@ -28,6 +34,8 @@ public record Post(int id, int authorId, String author, String authorJob, String
         private String link = "";
         private boolean mentionedMe = false;
         private boolean likedByMe = false;
+        private Coordinates coordinates;
+        private Attachment attachment;
 
         public Builder setId(int id) {
             this.id = id;
@@ -79,10 +87,21 @@ public record Post(int id, int authorId, String author, String authorJob, String
             return this;
         }
 
+        public Builder setCoordinates(@Nullable Coordinates coordinates) {
+            this.coordinates = coordinates;
+            return this;
+        }
+
+        public Builder setAttachment(@Nullable Attachment attachment) {
+            this.attachment = attachment;
+            return this;
+        }
+
         public Post build() {
             return new Post(id, authorId, author, authorJob,
                     authorAvatar, context, published,
-                    link, mentionedMe, likedByMe);
+                    link, mentionedMe, likedByMe, coordinates, attachment);
         }
+
     }
 }
