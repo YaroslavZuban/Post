@@ -1,5 +1,7 @@
 package com.eltex.service;
 
+import com.eltex.post.Attachment;
+import com.eltex.post.Coordinates;
 import com.eltex.post.Post;
 
 public class WallService {
@@ -75,6 +77,18 @@ public class WallService {
     public void setLinkedByMe(final boolean linkedByMe) {
         post = post.builder()
                 .setLikedByMe(linkedByMe)
+                .build();
+    }
+
+    public void setCoordinates(final Coordinates coordinates) {
+        post = post.builder()
+                .setCoordinates(coordinates)
+                .build();
+    }
+
+    public void setAttachment(final Attachment attachment) {
+        post = post.builder()
+                .setAttachment(attachment)
                 .build();
     }
 
