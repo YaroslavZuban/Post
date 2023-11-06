@@ -1,37 +1,49 @@
 package com.eltex.service;
 
 import com.eltex.exceptions.NotFoundException;
+import com.eltex.post.Post;
 import com.eltex.user.User;
 
 import java.util.Collections;
 import java.util.List;
 
 public class UserService {
-    private static long USER_ID = 1;
+    private long userId;
     private List<User> users = Collections.emptyList();
 
-    public void save(final User user) {
+    public UserService(long userId) {
+        this.userId = userId;
+    }
+
+    public void save(User user) {
         if (user.id() == 0) {
-            user.builder().setId(USER_ID);
-
-            USER_ID++;
-            users.add(user);
+            users.add(user.builder().setId(++userId).build());
         } else {
-            User userEdit = getById(user.id());
+            updateUser(user);
+        }
+    }
 
-            userEdit.builder()
-                    .setLogin(user.login())
-                    .setName(user.name())
-                    .setAvatar(user.avatar());
+    public void updateUser(final User userUpdated) {
+        for (int i = 0; i < users.size(); i++) {
+            final User iterator = users.get(i);
+
+            if (iterator.id() == userUpdated.id()) {
+                users.set(i, userUpdated);
+                break;
+            }
         }
     }
 
     public void removeById(final long userId) {
         if (userId < 0) {
-            throw new NotFoundException("There is no user with this ID");
+            throw new NotFoundException("The user ID cannot be negative");
         }
 
-        users.removeIf(user -> user.id() == userId);
+        boolean removed = users.removeIf(user -> user.id() == userId);
+
+        if (!removed) {
+            throw new NotFoundException("User with id " + userId + " not found.");
+        }
     }
 
     public User getById(final long userId) {
